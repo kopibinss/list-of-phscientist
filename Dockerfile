@@ -1,7 +1,7 @@
-# Step 1: Set up the base image for PHP and install necessary dependencies
+# Step 1: Use the official PHP image with FPM (FastCGI Process Manager)
 FROM php:8.1-fpm
 
-# Step 2: Install dependencies for MySQL and PHP extensions
+# Step 2: Install required dependencies
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
@@ -19,20 +19,14 @@ WORKDIR /var/www
 # Step 4: Copy the application code from the host machine to the container
 COPY . .
 
-# Step 5: Install Composer (dependency manager for PHP)
+# Step 5: Install Composer (PHP dependency manager)
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Step 6: Install Laravel dependencies using Composer
 RUN composer install --optimize-autoloader --no-dev
 
-# Step 7: Set up the Nginx server for PHP
-FROM nginx:latest
+# Step 7: Expose port 9000 for PHP-FPM
+EXPOSE 9000
 
-# Step 8: Copy Nginx configuration
-COPY ./nginx/default.conf /etc/nginx/conf.d/
-
-# Step 9: Expose port 80 for web traffic
-EXPOSE 80
-
-# Step 10: Start PHP-FPM and Nginx services
-CMD ["sh", "-c", "php-fpm & nginx -g 'daemon off;'"]
+# Step 8: Start the PHP-FPM server
+CMD ["php-fpm"]
