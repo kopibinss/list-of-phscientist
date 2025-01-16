@@ -6,8 +6,8 @@ ARG WWWGROUP=1000
 ARG WWWUSER=1000  # You may want to set a default user ID if not passed
 
 # Create a group and user with specific IDs
-RUN groupadd --force -g ${WWWGROUP} sail && \
-    useradd --force -u ${WWWUSER} --gid ${WWWGROUP} --create-home sail
+# RUN groupadd --force -g ${WWWGROUP} sail && \
+#     useradd --force -u ${WWWUSER} --gid ${WWWGROUP} --create-home sail
 
 # Install dependencies required for PHP extensions and Nginx (common for Laravel)
 RUN apt-get update && apt-get install -y \
