@@ -20,6 +20,9 @@ RUN apt-get update && apt-get install -y \
 
 # Copy application and set permissions
 COPY --from=builder /app /var/www/html
+
+ARG WWWGROUP=1000
+ARG WWWUSER=1000
 RUN groupadd -g "$WWWGROUP" sail || true && \
     useradd -u "$WWWUSER" -g sail -m sail || true && \
     chown -R "$WWWUSER":"$WWWGROUP" /var/www/html
