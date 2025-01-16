@@ -8,15 +8,13 @@ RUN composer install --optimize-autoloader --no-dev
 FROM php:8.3-fpm
 WORKDIR /var/www/html
 
-# Update package list and install dependencies separately
-RUN apt-get update -y \
-    && apt-get install -y \
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
     zip \
     unzip \
-    mysql-client \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd pdo pdo_mysql bcmath
 
@@ -32,5 +30,4 @@ RUN groupadd -g "$WWWGROUP" sail || true && \
 # Expose PHP-FPM port
 EXPOSE 10000
 
-# Start PHP-FPM
-CMD php artisan serve --host=0.0.0.0 --port=${PORT}
+CMD ["php-fpm"] php artisan serve --host=0.0.0.0 --port=${PORT}
