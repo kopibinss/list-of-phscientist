@@ -25,6 +25,7 @@ RUN groupadd -g "$WWWGROUP" sail || true && \
     chown -R "$WWWUSER":"$WWWGROUP" /var/www/html
 
 # Expose PHP-FPM port
-EXPOSE 9000
+EXPOSE ${PORT}
+
 
 CMD ["php-fpm"]
