@@ -13,8 +13,8 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     </head>
     <body>
-        <div class="d-flex justify-content-center align-items-center" style="height: 100vh; font-family: 'figtree', sans-serif;">
-            <div class="container p-6 bg-white">
+        <div class="d-flex justify-content-center align-items-center bg-dark" style="height: 100vh; font-family: 'figtree', sans-serif;">
+            <div class="container">
                 <div class="bg-primary rounded mt-4">
                     <h5 class="p-2 text-center text-white fw-bold">List of PH Scientists</h5>
                 </div>
