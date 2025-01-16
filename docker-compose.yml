@@ -11,6 +11,7 @@ services:
         ports:
             - "${PORT}:${PORT}" # Forward the correct port
             - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
+            - '10000:10000' # Added port for Render
         environment:
             WWWUSER: '${WWWUSER}'
             LARAVEL_SAIL: 1
