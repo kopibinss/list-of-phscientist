@@ -2,8 +2,8 @@
 FROM php:8.3-fpm
 
 # Arguments from docker-compose
-ARG WWWGROUP
-ARG WWWUSER
+ARG WWWGROUP=1000
+ARG WWWUSER=1000
 
 # Set environment variables
 ENV DEBIAN_FRONTEND noninteractive
@@ -27,10 +27,10 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
-# Fix permissions
-RUN groupadd -g "$WWWGROUP" sail && \
-    useradd -u "$WWWUSER" -g sail -m sail && \
-    chown -R sail:sail /var/www/html
+# Fix permissions and create user/group
+RUN groupadd -g "$WWWGROUP" sail || true && \
+    useradd -u "$WWWUSER" -g sail -m sail || true && \
+    chown -R "$WWWUSER":"$WWWGROUP" /var/www/html
 
 # Switch to the sail user
 USER sail
