@@ -15,9 +15,12 @@ services:
       LARAVEL_SAIL: 1
       APP_ENV: production
       APP_KEY: base64:KtRfHlVH9Gcw7xEsMAjJBYco73YgpkTpUvXwNTMBt/Y=
+      PORT: ${PORT} # Render-provided PORT
       APP_DEBUG: false
       XDEBUG_MODE: off
       IGNITION_LOCAL_SITES_PATH: '${PWD}'
+    command: >
+            php artisan serve --host=0.0.0.0 --port=${PORT}
     volumes:
       - '.:/var/www/html:delegated'
     networks:
