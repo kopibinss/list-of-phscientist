@@ -1,42 +1,30 @@
-# Base image for PHP 8.3 with FPM
+# Build Stage
+FROM composer:2.6 AS builder
+WORKDIR /app
+COPY . /app
+RUN composer install --optimize-autoloader --no-dev
+
+# Production Stage
 FROM php:8.3-fpm
-
-# Arguments from docker-compose
-ARG WWWGROUP=1000
-ARG WWWUSER=1000
-
-# Set environment variables
-ENV DEBIAN_FRONTEND noninteractive
+WORKDIR /var/www/html
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    unzip \
-    libpq-dev \
-    libzip-dev \
-    libonig-dev \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
     zip \
-    bash && \
-    docker-php-ext-install pdo_mysql mbstring zip && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    unzip \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) gd pdo pdo_mysql bcmath
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Set working directory
-WORKDIR /var/www/html
-
-# Fix permissions and create user/group
+# Copy application and set permissions
+COPY --from=builder /app /var/www/html
 RUN groupadd -g "$WWWGROUP" sail || true && \
     useradd -u "$WWWUSER" -g sail -m sail || true && \
     chown -R "$WWWUSER":"$WWWGROUP" /var/www/html
 
-# Switch to the sail user
-USER sail
+# Expose PHP-FPM port
+EXPOSE 9000
 
-# Expose the application port
-EXPOSE 80
-
-# Run PHP-FPM by default
 CMD ["php-fpm"]
