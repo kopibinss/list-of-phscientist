@@ -1,48 +1,42 @@
-# Start with an official PHP image as the base image
+# Base image for PHP 8.3 with FPM
 FROM php:8.3-fpm
 
-# Set environment variables (these can be overridden in docker-compose.yml)
-ARG WWWGROUP=1000
-ARG WWWUSER=1000  # You may want to set a default user ID if not passed
+# Arguments from docker-compose
+ARG WWWGROUP
+ARG WWWUSER
 
-# Create a group and user with specific IDs
-# RUN groupadd --force -g ${WWWGROUP} sail && \
-#     useradd --force -u ${WWWUSER} --gid ${WWWGROUP} --create-home sail
+# Set environment variables
+ENV DEBIAN_FRONTEND noninteractive
 
-# Install dependencies required for PHP extensions and Nginx (common for Laravel)
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    libzip-dev \
-    zip \
     git \
     curl \
     unzip \
-    libmysqlclient-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql zip
+    libpq-dev \
+    libzip-dev \
+    libonig-dev \
+    zip \
+    bash && \
+    docker-php-ext-install pdo_mysql mbstring zip && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install Composer globally
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set the working directory in the container
+# Set working directory
 WORKDIR /var/www/html
 
-# Copy application files from the host machine to the container
-COPY . .
+# Fix permissions
+RUN groupadd -g "$WWWGROUP" sail && \
+    useradd -u "$WWWUSER" -g sail -m sail && \
+    chown -R sail:sail /var/www/html
 
-# Set proper permissions for the Laravel application (ensure the www user can access files)
-RUN chown -R ${WWWUSER}:${WWWGROUP} /var/www/html
+# Switch to the sail user
+USER sail
 
-# Expose ports (for Nginx and application)
-EXPOSE 80 5173
+# Expose the application port
+EXPOSE 80
 
-# Set environment variables required for Xdebug and Laravel Sail
-ENV LARAVEL_SAIL=1
-ENV XDEBUG_MODE=off
-ENV XDEBUG_CONFIG="client_host=host.docker.internal"
-ENV IGNITION_LOCAL_SITES_PATH=${PWD}
-
-# Start PHP-FPM server to serve Laravel
+# Run PHP-FPM by default
 CMD ["php-fpm"]
