@@ -28,6 +28,6 @@ RUN groupadd -g "$WWWGROUP" sail || true && \
     chown -R "$WWWUSER":"$WWWGROUP" /var/www/html
 
 # Expose PHP-FPM port
-EXPOSE 10000
+EXPOSE 8080
 
 CMD php artisan serve --host=0.0.0.0 --port=${PORT}
