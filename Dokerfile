@@ -23,7 +23,7 @@ WORKDIR /var/www
 COPY . .
 
 # Set environment variables
-ENV APP_NAME=dost5JobPortal \
+ENV APP_NAME=PHScientists \
     APP_ENV=local \
     APP_KEY=base64:v9AbUhNzqrbFIzuYnJyYV6I2cXc6TBkzizKsPzMGumw= \
     APP_DEBUG=true \
