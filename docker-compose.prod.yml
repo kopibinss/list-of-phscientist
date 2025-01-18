@@ -28,20 +28,20 @@ services:
             - mailpit
             - selenium
 
-    # scheduler:
-    #     image: php:8.2-cli
-    #     build:
-    #         context: .
-    #         dockerfile: Dockerfile-scheduler
-    #     container_name: laravel-scheduler
-    #     working_dir: /var/www/html
-    #     volumes:
-    #         - '.:/var/www/html'
-    #     depends_on:
-    #         - laravel.test
-    #         - mysql
-    #     networks:
-    #         - sail
+    scheduler:
+        image: php:8.2-cli
+        build:
+            context: .
+            dockerfile: Dockerfile-scheduler
+        container_name: laravel-scheduler
+        working_dir: /var/www/html
+        volumes:
+            - '.:/var/www/html'
+        depends_on:
+            - laravel.test
+            - mysql
+        networks:
+            - sail
     mysql:
         image: 'mysql/mysql-server:8.0'
         ports:
