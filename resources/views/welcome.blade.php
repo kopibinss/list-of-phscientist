@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Laravel</title>
+        <title>PHScientists</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -216,9 +216,9 @@
                     alerts.forEach(alert => {
                         alert.classList.add('fade');
                         alert.classList.remove('show');
-                        setTimeout(() => alert.remove(), 150); // Remove from DOM after fade out
+                        setTimeout(() => alert.remove(), 150);
                     });
-                }, 5000); // Change the duration as needed
+                }, 5000);
             });
         </script>
 
